@@ -4,7 +4,7 @@ const postsContainer = document.getElementById('posts');
 const path = 'https://orikamixnep.github.io/knowledge-output/posts/'
 const files = [];
 
-for (let i = 2024; i <= 2025; i++) {
+for (let i = 2025; i >= 2024; i--) {
     files.push(path + i + '.md');
 }
 
@@ -46,9 +46,6 @@ async function loadPosts() {
         const posts = await fetchMarkdown(file);
         allPosts.push(...posts); // 全てのセクションを追加
     }
-
-    // 日付順に並び替え (降順: 最新が先)
-    allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     // HTMLにレンダリング
     allPosts.forEach(post => {
