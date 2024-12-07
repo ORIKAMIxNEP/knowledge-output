@@ -1,10 +1,35 @@
-const postsContainer = document.getElementById('posts');
+loadPosts();
 
-const path = 'https://orikamixnep.github.io/knowledge-output/posts/'
-const files = [];
+async function loadPosts() {
+    const postsContainer = document.getElementById('posts');
 
-for (let i = 2025; i >= 2024; i--) {
-    files.push(path + i + '.md');
+    // outputフォルダ内のマークダウンファイルを指定
+    const path = 'https://orikamixnep.github.io/knowledge-output/posts/'
+    const files = [];
+    
+    for (let i = 2025; i >= 2024; i--) {
+        files.push(path + i + '.md');
+    }
+    const allPosts = [];
+
+    for (const file of files) {
+        const posts = await fetchMarkdown(file);
+        allPosts.push(...posts); // 全てのセクションを追加
+    }
+
+    // HTMLにレンダリング
+    allPosts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+
+        postElement.innerHTML = `
+            <div class="post-title">${post.title}</div>
+            <div class="post-date">${post.date}</div>
+            <div class="post-content">${marked.parse(post.content)}</div>
+        `;
+
+        postsContainer.appendChild(postElement);
+    });
 }
 
 // セクション区切り文字を使って分割し、それぞれのセクションを処理
@@ -36,27 +61,3 @@ async function fetchMarkdown(file) {
 
     return posts;
 }
-
-    const allPosts = [];
-
-    for (const file of files) {
-        const posts = await fetchMarkdown(file);
-        allPosts.push(...posts); // 全てのセクションを追加
-    }
-
-    // HTMLにレンダリング
-    allPosts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.className = 'post';
-
-        const content=marked.parse(post.content);
-
-        postElement.innerHTML = `
-            <div class="post-title">${post.title}</div>
-            <div class="post-date">${post.date}</div>
-            <div class="post-content">${content}</div>
-        `;
-
-        postsContainer.appendChild(postElement);
-    });
-
