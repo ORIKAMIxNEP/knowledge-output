@@ -11,7 +11,7 @@ async function fetchPosts() {
     const posts = [];
 
     for (const postYear of postYears) {
-        const annualPostFileUrl = postFilesBaseUrl + postYear+ '.md';
+        const annualPostFileUrl = postFilesBaseUrl + postYear + '.md';
         const annualPostFile = await fetch(annualPostFileUrl);
         const annualPostText = await annualPostFile.text();
         const annualPosts = annualPostText.split(/\n\n+/).map(postText => postText.trim()).filter(Boolean);
