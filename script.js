@@ -1,7 +1,7 @@
 const postsContainer = document.getElementById('posts');
 
 // outputフォルダ内のマークダウンファイルを指定
-const files = ['post1.md'];
+const files = ['output/post1.md'];
 
 // マークダウンを取得してHTMLに変換
 async function fetchMarkdown(file) {
