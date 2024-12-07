@@ -9,10 +9,6 @@ body {
     background-color: #f9f9f9;
 }
 
-h1 {
-    margin-top: 20px;
-}
-
 #posts {
     width: 90%;
     max-width: 800px;
