@@ -28,7 +28,7 @@ function parsePost(post, year) {
     const title = post.match(/^# (.+)$/m)[1];
     const content = post.replace(date, '').replace(/^# .+$/m, '').trim();
 
-    return { date, title, content };
+    return { fullDate, title, content };
 }
 
 function renderPosts(posts) {
