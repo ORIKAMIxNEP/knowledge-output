@@ -1,7 +1,7 @@
 const postsContainer = document.getElementById('posts');
 
 // outputフォルダ内のマークダウンファイルを指定
-const files = ['https://orikamixnep.github.io/knowledge-output/output/post1.md'];
+const files = ['https://orikamixnep.github.io/knowledge-output/output/post1.md', 'https://orikamixnep.github.io/knowledge-output/output/post2.md'];
 
 // マークダウンを取得してHTMLに変換
 async function fetchMarkdown(file) {
