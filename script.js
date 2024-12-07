@@ -8,22 +8,22 @@ async function main() {
 
 async function fetchPosts() {
     const postFilesBaseUrl = 'https://orikamixnep.github.io/knowledge-output/posts/';
-    const annualPostFileUrls = postYears.flatMap(postYear => `${postFilesBaseUrl}${postYear}.md`);
     const posts = [];
 
-    for (const annualPostFileUrl of annualPostFileUrls) {
+    for (const postYear of postYears) {
+        const annualPostFileUrl = postFilesBaseUrl + postYear+ '.md';
         const annualPostFile = await fetch(annualPostFileUrl);
         const annualPostText = await annualPostFile.text();
         const annualPosts = annualPostText.split(/\n\n+/).map(postText => postText.trim()).filter(Boolean);
-        const parsedAnnualPosts = annualPosts.map(parsePost);
+        const parsedAnnualPosts = annualPosts.map(post => parsePost(post, year));
         posts.push(...parsedAnnualPosts);
     }
 
     return posts;
 }
 
-function parsePost(post) {
-    const date = post.match(/\d{4}-\d{2}-\d{2}/)[0];
+function parsePost(post, year) {
+    const date = year + '-' + post.match(/\d{4}-\d{2}-\d{2}/)[0];
     const title = post.match(/^# (.+)$/m)[1];
     const content = post.replace(date, '').replace(/^# .+$/m, '').trim();
 
