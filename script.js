@@ -65,3 +65,4 @@ async function loadPosts() {
 }
 
 loadPosts();
+console.log(marked);
