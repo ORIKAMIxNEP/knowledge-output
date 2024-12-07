@@ -8,54 +8,59 @@ for (let i = 2024; i <= 2025; i++) {
     files.push(path + i + '.md');
 }
 
-// マークダウンファイルを読み込む
+// セクション区切り文字を使って分割し、それぞれのセクションを処理
 async function fetchMarkdown(file) {
     const response = await fetch(file);
     const text = await response.text();
 
-    // 日付を認識 (YYYY-MM-DD形式を探す)
-    const dateMatch = text.match(/\d{4}-\d{2}-\d{2}/);
-    const date = dateMatch ? dateMatch[0] : '不明な日付';
-
-    // タイトル (# Title) を抽出
-    const titleMatch = text.match(/^# (.+)$/m);
-    const title = titleMatch ? titleMatch[1] : '無題';
-
-    // 本文 (タイトルや日付行を除いた内容)
-    const content = text
-        .replace(dateMatch?.[0] || '', '') // 日付行を削除
-        .replace(titleMatch?.[0] || '', '') // タイトル行を削除
-        .trim();
-
-    return { date, title, content };
-}
-
-// 投稿をレンダリング
-async function loadPosts() {
+    // セクションを`---`で分割
+    const sections = text.split(/^---$/m).map(section => section.trim()).filter(Boolean);
     const posts = [];
 
-    for (const file of files) {
-        const { date, title, content } = await fetchMarkdown(file);
-        const htmlContent = marked(content); // マークダウンをHTMLに変換
-        posts.push({ date, title, htmlContent });
+    for (const section of sections) {
+        // 日付を認識 (YYYY-MM-DD形式を探す)
+        const dateMatch = section.match(/\d{4}-\d{2}-\d{2}/);
+        const date = dateMatch ? dateMatch[0] : '不明な日付';
+
+        // タイトル (# Title) を抽出
+        const titleMatch = section.match(/^# (.+)$/m);
+        const title = titleMatch ? titleMatch[1] : '無題';
+
+        // 本文 (タイトルや日付行を除いた内容)
+        const content = section
+            .replace(dateMatch?.[0] || '', '') // 日付行を削除
+            .replace(titleMatch?.[0] || '', '') // タイトル行を削除
+            .trim();
+
+        posts.push({ date, title, content });
     }
 
-    // 日付順に並び替え
-    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    return posts;
+}
+
+// 投稿を表示
+async function loadPosts() {
+    const allPosts = [];
+
+    for (const file of files) {
+        const posts = await fetchMarkdown(file);
+        allPosts.push(...posts); // 全てのセクションを追加
+    }
+
+    // 日付順に並び替え (降順: 最新が先)
+    allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     // HTMLにレンダリング
-    posts.forEach(post => {
+    allPosts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
 
         postElement.innerHTML = `
             <div class="post-title">${post.title}</div>
             <div class="post-date">${post.date}</div>
-            <div class="post-content">${post.htmlContent}</div>
+            <div class="post-content">${marked(post.content)}</div>
         `;
 
         postsContainer.appendChild(postElement);
     });
 }
-
-loadPosts();
