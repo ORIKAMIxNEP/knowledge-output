@@ -1,22 +1,58 @@
-// マークダウンの基本設定
-const markdown_setting = window.markdownit({
-  html: true, // htmlタグを有効にする
-  breaks: true, // md内の改行を<br>に変換
-});
+const postsContainer = document.getElementById('posts');
 
-const markdown_editer = $(".js-markdown-editer");
+// outputフォルダ内のマークダウンファイルを指定
+const files = ['output/post1.md', 'output/post2.md'];
 
-// マークダウンの設定をjs-markdown-editerにHTMLとして反映させる
-const markdown_html = markdown_setting.render(getHtml(markdown_editer));
-markdown_editer.html(markdown_html);
-  
-// 比較演算子（=，<>，<，<=，>，>=）をそのまま置換する
-function getHtml(selector) {
-  let markdown_text = $(selector).html();
-  // let markdown_text = document.querySelectorAll(selector)[1].innerHTML;
-  markdown_text = markdown_text.replace(/&lt;/g, "<");
-  markdown_text = markdown_text.replace(/&gt;/g, ">");
-  markdown_text = markdown_text.replace(/&amp;/g, "&");
+// マークダウンを取得してHTMLに変換
+async function fetchMarkdown(file) {
+    const response = await fetch(file);
+    const text = await response.text();
 
-  return markdown_text;
+    // YAML frontmatterの解析
+    const frontmatterMatch = text.match(/^---\n([\s\S]+?)\n---/);
+    let metadata = {};
+    let content = text;
+
+    if (frontmatterMatch) {
+        const yaml = frontmatterMatch[1];
+        content = text.replace(frontmatterMatch[0], '');
+        metadata = Object.fromEntries(
+            yaml.split('\n').map(line => {
+                const [key, ...value] = line.split(':');
+                return [key.trim(), value.join(':').trim()];
+            })
+        );
+    }
+
+    return { metadata, content };
 }
+
+// 投稿を表示
+async function loadPosts() {
+    const posts = [];
+
+    for (const file of files) {
+        const { metadata, content } = await fetchMarkdown(file);
+        const htmlContent = marked(content);
+        posts.push({ ...metadata, htmlContent });
+    }
+
+    // 日付順に並び替え
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // HTMLにレンダリング
+    posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+
+        postElement.innerHTML = `
+            <div class="post-title">${post.title}</div>
+            <div class="post-date">${post.date}</div>
+            <div class="post-content">${post.htmlContent}</div>
+        `;
+
+        postsContainer.appendChild(postElement);
+    });
+}
+
+loadPosts();
