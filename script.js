@@ -33,7 +33,7 @@ async function loadPosts() {
 
     for (const file of files) {
         const { metadata, content } = await fetchMarkdown(file);
-        const htmlContent = marked(content);
+        const htmlContent = marked.parse(content); 
         posts.push({ ...metadata, htmlContent });
     }
 
