@@ -4,7 +4,7 @@ const postsContainer = document.getElementById('posts');
 const path = 'https://orikamixnep.github.io/knowledge-output/output/'
 const files = [];
 
-for (let i = 2024; i < 2025; i++) {
+for (let i = 2024; i <= 2025; i++) {
     files.push(path + i);
 }
 
