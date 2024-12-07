@@ -52,7 +52,7 @@ async function loadPosts() {
         const postElement = document.createElement('div');
         postElement.className = 'post';
 
-        const content=marked(post.content);
+        const content=marked.parse(post.content);
 
         postElement.innerHTML = `
             <div class="post-title">${post.title}</div>
