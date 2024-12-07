@@ -52,10 +52,12 @@ async function loadPosts() {
         const postElement = document.createElement('div');
         postElement.className = 'post';
 
+        const content=marked(post.content);
+
         postElement.innerHTML = `
             <div class="post-title">${post.title}</div>
             <div class="post-date">${post.date}</div>
-            <div class="post-content">${marked(post.content)}</div>
+            <div class="post-content">${content}</div>
         `;
 
         postsContainer.appendChild(postElement);
