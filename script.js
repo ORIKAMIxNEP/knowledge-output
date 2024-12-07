@@ -61,3 +61,5 @@ async function loadPosts() {
         postsContainer.appendChild(postElement);
     });
 }
+
+loadPosts();
