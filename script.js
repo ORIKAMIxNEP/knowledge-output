@@ -1,11 +1,11 @@
 const postsContainer = document.getElementById('posts');
 
 // outputフォルダ内のマークダウンファイルを指定
-const path = 'https://orikamixnep.github.io/knowledge-output/output/'
+const path = 'https://orikamixnep.github.io/knowledge-output/posts/'
 const files = [];
 
 for (let i = 2024; i <= 2025; i++) {
-    files.push(path + 'post' + i + '.md');
+    files.push(path + i + '.md');
 }
 
 // マークダウンファイルを読み込む
