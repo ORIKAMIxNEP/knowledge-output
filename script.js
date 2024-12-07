@@ -13,11 +13,16 @@ async function fetchMarkdown(file) {
     const response = await fetch(file);
     const text = await response.text();
 
-    // 日付・タイトル・本文を抽出
+    // 日付・タイトルを抽出
     const lines = text.split('\n');
     const date = lines[0]?.match(/\d{4}-\d{2}-\d{2}/)?.[0] || 'Undefined';
     const title = lines[1]?.replace('# ', '').trim() || 'Undefined';
-    const content = lines.slice(2).join('\n');
+
+    // 本文 (タイトルや日付行を除いた内容)
+    const content = text
+        .replace(dateMatch?.[0] || '', '') // 日付行を削除
+        .replace(titleMatch?.[0] || '', '') // タイトル行を削除
+        .trim();
 
     return { date, title, content };
 }
@@ -28,12 +33,7 @@ async function loadPosts() {
 
     for (const file of files) {
         const { date, title, content } = await fetchMarkdown(file);
-
-        // Markdownを簡易的にHTMLに変換
-        const htmlContent = content
-            .replace(/^- (.+)$/gm, '<li>$1</li>') // リスト
-            .replace(/\n/g, '<br>'); // 改行
-
+        const htmlContent = marked(content); // マークダウンをHTMLに変換
         posts.push({ date, title, htmlContent });
     }
 
