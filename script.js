@@ -13,10 +13,13 @@ async function fetchMarkdown(file) {
     const response = await fetch(file);
     const text = await response.text();
 
-    // 日付・タイトルを抽出
-    const lines = text.split('\n');
-    const date = lines[0]?.match(/\d{4}-\d{2}-\d{2}/)?.[0] || 'Undefined';
-    const title = lines[1]?.replace('# ', '').trim() || 'Undefined';
+    // 日付を認識 (YYYY-MM-DD形式を探す)
+    const dateMatch = text.match(/\d{4}-\d{2}-\d{2}/);
+    const date = dateMatch ? dateMatch[0] : '不明な日付';
+
+    // タイトル (# Title) を抽出
+    const titleMatch = text.match(/^# (.+)$/m);
+    const title = titleMatch ? titleMatch[1] : '無題';
 
     // 本文 (タイトルや日付行を除いた内容)
     const content = text
