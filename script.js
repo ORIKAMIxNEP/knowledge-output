@@ -13,8 +13,8 @@ async function fetchMarkdown(file) {
     const response = await fetch(file);
     const text = await response.text();
 
-    // セクションを`---`で分割
-    const sections = text.split(/^\n\n$/m).map(section => section.trim()).filter(Boolean);
+    // 空行2つで分割
+    const sections = text.split(/\n\n+/).map(section => section.trim()).filter(Boolean);
     const posts = [];
 
     for (const section of sections) {
