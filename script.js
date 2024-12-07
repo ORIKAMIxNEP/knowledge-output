@@ -1,6 +1,5 @@
 const postsContainer = document.getElementById('posts');
 
-// outputフォルダ内のマークダウンファイルを指定
 const path = 'https://orikamixnep.github.io/knowledge-output/posts/'
 const files = [];
 
@@ -38,8 +37,6 @@ async function fetchMarkdown(file) {
     return posts;
 }
 
-// 投稿を表示
-async function loadPosts() {
     const allPosts = [];
 
     for (const file of files) {
@@ -62,7 +59,4 @@ async function loadPosts() {
 
         postsContainer.appendChild(postElement);
     });
-}
 
-loadPosts();
-console.log(marked);
