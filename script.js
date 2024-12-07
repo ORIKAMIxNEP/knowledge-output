@@ -26,7 +26,7 @@ function parsePost(post, postYear) {
     const dateWithoutYear = post.match(/\d{2}-\d{2}/)[0];
     const date = `${postYear}-${dateWithoutYear}`;
     const title = post.match(/^# (.+)$/m)[1];
-    const content = post.replace(date, '').replace(/^# .+$/m, '').trim();
+    const content = post.replace(dateWithoutYear, '').replace(/^# .+$/m, '').trim();
 
     return { date, title, content };
 }
