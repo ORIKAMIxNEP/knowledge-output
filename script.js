@@ -1,40 +1,40 @@
 const postsContainer = document.getElementById('posts');
 
 // outputフォルダ内のマークダウンファイルを指定
-const files = ['https://orikamixnep.github.io/knowledge-output/output/post1.md', 'https://orikamixnep.github.io/knowledge-output/output/post2.md'];
+const path = 'https://orikamixnep.github.io/knowledge-output/output/'
+const files = [];
 
-// マークダウンを取得してHTMLに変換
+for (let i = 2024; i < 2025; i++) {
+    files.push(path + i);
+}
+
+// マークダウンファイルを読み込む
 async function fetchMarkdown(file) {
     const response = await fetch(file);
     const text = await response.text();
 
-    // YAML frontmatterの解析
-    const frontmatterMatch = text.match(/^---\n([\s\S]+?)\n---/);
-    let metadata = {};
-    let content = text;
+    // 日付・タイトル・本文を抽出
+    const lines = text.split('\n');
+    const date = lines[0]?.match(/\d{4}-\d{2}-\d{2}/)?.[0] || 'Undefined';
+    const title = lines[1]?.replace('# ', '').trim() || 'Undefined';
+    const content = lines.slice(2).join('\n');
 
-    if (frontmatterMatch) {
-        const yaml = frontmatterMatch[1];
-        content = text.replace(frontmatterMatch[0], '');
-        metadata = Object.fromEntries(
-            yaml.split('\n').map(line => {
-                const [key, ...value] = line.split(':');
-                return [key.trim(), value.join(':').trim()];
-            })
-        );
-    }
-
-    return { metadata, content };
+    return { date, title, content };
 }
 
-// 投稿を表示
+// 投稿をレンダリング
 async function loadPosts() {
     const posts = [];
 
     for (const file of files) {
-        const { metadata, content } = await fetchMarkdown(file);
-        const htmlContent = marked.parse(content); 
-        posts.push({ ...metadata, htmlContent });
+        const { date, title, content } = await fetchMarkdown(file);
+
+        // Markdownを簡易的にHTMLに変換
+        const htmlContent = content
+            .replace(/^- (.+)$/gm, '<li>$1</li>') // リスト
+            .replace(/\n/g, '<br>'); // 改行
+
+        posts.push({ date, title, htmlContent });
     }
 
     // 日付順に並び替え
