@@ -1,6 +1,0 @@
-theme: jekyll-theme-minimal
-encding: utf-8
-plugins: 
-  - jekyll-github-metadata
-github : [metadata]
-repository: ORIKAMIxNEP/knowledge-output
