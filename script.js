@@ -1,40 +1,28 @@
+const postYears = [2025, 2024];
 main();
 
 async function main() {
-    const postElements = document.getElementById('posts');
-    const postFileUrls = createPostFileUrls();
-    const posts = await fetchAllPosts(postFileUrls);
-
-    renderPosts(postElements, posts);
+    const posts = await fetchPosts();
+    renderPosts(posts);
 }
 
-function createPostFileUrls() {
-    const baseUrl = 'https://orikamixnep.github.io/knowledge-output/posts/';
-    const years = [2025, 2024];
-
-    return years.flatMap(year => `${baseUrl}${year}.md`);
-}
-
-async function fetchPosts(postFileUrls) {
+async function fetchPosts() {
+    const postFilesBaseUrl = 'https://orikamixnep.github.io/knowledge-output/posts/';
+    const annualPostFileUrls = postYears.flatMap(postYear => `${postFilesBaseUrl}${postYear}.md`);
     const posts = [];
 
-    for (const postFileUrl of postFileUrls) {
-        const annualPosts = await fetchAnnualPosts(postFileUrl);
-        posts.push(...annualPosts);
+    for (const annualPostFileUrl of annualPostFileUrls) {
+        const annualPostFile = await fetch(annualPostFileUrl);
+        const annualPostText = await annualPostFile.text();
+        const annualPosts = annualPostText.split(/\n\n+/).map(postText => postText.trim()).filter(Boolean);
+        const parsedAnnualPosts = annualPosts.map(parsePost);
+        posts.push(...parsedAnnualPosts);
     }
 
     return posts;
 }
 
-async function fetchAnnualPosts(postFileUrl) {
-    const annualPostFile = await fetch(postFileUrl);
-    const annualPostText = await postFile.text();
-    const annualPosts = annualPostText.split(/\n\n+/).map(post => post.trim()).filter(Boolean);
-
-    return annualPosts.map(parseAnnualPost);
-}
-
-function parseAnnualPost(post) {
+function parsePost(post) {
     const date = post.match(/\d{4}-\d{2}-\d{2}/);
     const title = post.match(/^# (.+)$/m);
     const content = post.replace(date, '').replace(title, '').trim();
@@ -42,22 +30,17 @@ function parseAnnualPost(post) {
     return { date, title, content };
 }
 
-function renderPosts(postElements, posts) {
+function renderPosts(posts) {
+    const postElements = document.getElementById('posts');
+
     posts.forEach(post => {
-        const postElement = createPostElement(post);
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        postElement.innerHTML = `
+            <div class="post-title">${post.title}</div>
+            <div class="post-date">${post.date}</div>
+            <div class="post-content">${marked.parse(post.content)}</div>
+        `;
         postElements.appendChild(postElement);
     });
-}
-
-function createPostElement(post) {
-    const postElement = document.createElement('div');
-    postElement.className = 'post';
-
-    postElement.innerHTML = `
-        <div class="post-title">${post.title}</div>
-        <div class="post-date">${post.date}</div>
-        <div class="post-content">${marked.parse(post.content)}</div>
-    `;
-
-    return postElement;
 }
