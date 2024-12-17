@@ -19,7 +19,6 @@ async function fetchPosts() {
       .split(/(?=^# )/m)
       .map((postText) => postText.trim())
       .filter(Boolean);
-    console.log(annualPosts);
     const parsedAnnualPosts = annualPosts.map((post) =>
       parsePost(post, postYear)
     );
@@ -30,7 +29,6 @@ async function fetchPosts() {
 }
 
 function parsePost(post, postYear) {
-  console.log(post);
   const [title, dateWithoutYear, ...content] = post.split("\n");
   const date = `${postYear}-${dateWithoutYear}`;
   const parsedContent = content.join("<br>").trim();
@@ -44,6 +42,7 @@ function renderPosts(posts) {
   posts.forEach((post) => {
     const postElement = document.createElement("div");
     postElement.className = "post";
+    console.log(post.content);
     postElement.innerHTML = `
             <div class="post-title">${post.title}</div>
             <div class="post-date">${post.date}</div>
