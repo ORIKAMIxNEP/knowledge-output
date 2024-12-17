@@ -31,7 +31,7 @@ async function fetchPosts() {
 function parsePost(post, postYear) {
   const [title, dateWithoutYear, ...others] = post.split("\n");
   const date = `${postYear}-${dateWithoutYear}`;
-  const content = others.join("<br>").trim();
+  const content = others.join("\n").trim();
 
   return { title, date, content };
 }
