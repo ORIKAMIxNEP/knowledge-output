@@ -31,16 +31,11 @@ async function fetchPosts() {
 
 function parsePost(post, postYear) {
   console.log(post);
-  const title = post.match(/^# .*$/)[0];
-  const dateWithoutYear = post.match(/\b\d{1,2}-\d{1,2}\b$/)[0];
+  const [title, dateWithoutYear, ...content] = post.split("\n");
   const date = `${postYear}-${dateWithoutYear}`;
-  const content = post
-    .replace(title, "")
-    .replace(dateWithoutYear, "")
-    .replace("\n", "<br>")
-    .trim();
+  const parsedContent = content.join("<br>").trim();
 
-  return { title, date, content };
+  return { title, date, parsedContent };
 }
 
 function renderPosts(posts) {
