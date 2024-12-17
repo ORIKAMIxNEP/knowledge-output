@@ -19,9 +19,9 @@ async function fetchPosts() {
       .split(/(?<=^# )\n/gm)
       .map((postText) => postText.trim())
       .filter(Boolean);
-    console.log(annualPosts)
+    console.log(annualPosts);
     const parsedAnnualPosts = annualPosts.map((post) =>
-      parsePost(post, postYear);
+      parsePost(post, postYear)
     );
     posts.push(...parsedAnnualPosts);
   }
@@ -30,7 +30,7 @@ async function fetchPosts() {
 }
 
 function parsePost(post, postYear) {
-  console.log(post)
+  console.log(post);
   const title = post.match(/^# .*?/)[0];
   const dateWithoutYear = post.match(/\d{2}-\d{2}/)[0];
   const date = `${postYear}-${dateWithoutYear}`;
