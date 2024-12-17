@@ -42,7 +42,6 @@ function renderPosts(posts) {
   posts.forEach((post) => {
     const postElement = document.createElement("div");
     postElement.className = "post";
-    console.log(post.content);
     postElement.innerHTML = `
             <div class="post-title">${post.title}</div>
             <div class="post-date">${post.date}</div>
