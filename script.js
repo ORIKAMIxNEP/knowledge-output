@@ -16,7 +16,7 @@ async function fetchPosts() {
     const annualPostFile = await fetch(annualPostFileUrl);
     const annualPostText = await annualPostFile.text();
     const annualPosts = annualPostText
-      .split(/\n\n+/)
+      .split(/(?<=^# )\n/gm)
       .map((postText) => postText.trim())
       .filter(Boolean);
     const parsedAnnualPosts = annualPosts.map((post) =>
@@ -30,14 +30,15 @@ async function fetchPosts() {
 
 function parsePost(post, postYear) {
   const dateWithoutYear = post.match(/\d{2}-\d{2}/)[0];
+  const title = post.match(/^# .*?/)[1];
   const date = `${postYear}-${dateWithoutYear}`;
-  const title = post.match(/^# (.+)$/m)[1];
   const content = post
     .replace(dateWithoutYear, "")
-    .replace(/^# .+$/m, "")
+    .replace(/^# .*?/, "")
+    .replace("\n", "<br>")
     .trim();
 
-  return { date, title, content };
+  return { title, date, content };
 }
 
 function renderPosts(posts) {
