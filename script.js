@@ -29,8 +29,8 @@ async function fetchPosts() {
 }
 
 function parsePost(post, postYear) {
+  const title = post.match(/^# .*?/)[0];
   const dateWithoutYear = post.match(/\d{2}-\d{2}/)[0];
-  const title = post.match(/^# .*?/)[1];
   const date = `${postYear}-${dateWithoutYear}`;
   const content = post
     .replace(dateWithoutYear, "")
