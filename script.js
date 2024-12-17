@@ -29,9 +29,10 @@ async function fetchPosts() {
 }
 
 function parsePost(post, postYear) {
-  const [title, dateWithoutYear, ...others] = post.split("\n");
-  const date = `${postYear}-${dateWithoutYear}`;
-  const content = others.join("\n").trim();
+  const [plainTitle, plainDate, ...plainContent] = post.split("\n");
+  const title = plainTitle.replace("# ", "");
+  const date = `${postYear}-${plainDate}`;
+  const content = marked.parse(plainContent.join("\n").trim());
 
   return { title, date, content };
 }
@@ -45,7 +46,7 @@ function renderPosts(posts) {
     postElement.innerHTML = `
             <div class="post-title">${post.title}</div>
             <div class="post-date">${post.date}</div>
-            <div class="post-content">${marked.parse(post.content)}</div>
+            <div class="post-content">${post.content}</div>
         `;
     postElements.appendChild(postElement);
   });
