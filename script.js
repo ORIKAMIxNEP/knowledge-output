@@ -32,14 +32,13 @@ function parsePost(post, postYear) {
   const [plainTitle, plainDate, ...plainContent] = post.split("\n");
   const title = plainTitle.replace("# ", "");
   const date = `${postYear}-${plainDate}`;
-  const content = marked
-    .parse(
-      plainContent
-        .join("\n")
-        .replace(/-\s.*(?=\n(?!\s*-))/m, "$&\n\n")
-        .trim()
-      , { breaks: true }
-    )
+  const content = marked.parse(
+    plainContent
+      .join("\n")
+      .replace(/-\s.*(?=\n(?!\s*-))/m, "$&\n\n")
+      .trim(),
+    { breaks: true }
+  );
 
   return { title, date, content };
 }
