@@ -40,7 +40,6 @@ function parsePost(post, postYear) {
         .trim()
       , { breaks: true }
     )
-    // .replace("\n", "<br>");
 
   return { title, date, content };
 }
