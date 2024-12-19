@@ -39,7 +39,7 @@ function parsePost(post, postYear) {
         .replace(/-\s.*(?=\n(?!\s*-))/m, "$&\n\n")
         .trim()
     )
-    .replace("\n", "<br>");
+    // .replace("\n", "<br>");
 
   return { title, date, content };
 }
