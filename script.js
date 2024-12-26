@@ -4,7 +4,7 @@ main();
 async function main() {
   const posts = await fetchPosts();
   renderPosts(posts);
-  setUpSearchBox();
+  setUpSearchBox(posts);
 }
 
 async function fetchPosts() {
@@ -46,7 +46,7 @@ function parsePost(post, postYear) {
 
 function renderPosts(posts) {
   const postElements = document.getElementById("posts");
-  // postElements.innerHTML = "";
+  postElements.innerHTML = "";
 
   posts.forEach((post) => {
     const postElement = document.createElement("div");
@@ -60,7 +60,7 @@ function renderPosts(posts) {
   });
 }
 
-function setUpSearchBox() {
+function setUpSearchBox(posts) {
   const searchBox = document.getElementById("search-box");
   searchBox.addEventListener("input", () => {
     const searchText = searchBox.value.toLowerCase();
