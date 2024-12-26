@@ -4,6 +4,7 @@ main();
 async function main() {
   const posts = await fetchPosts();
   renderPosts(posts);
+  setUpSearchBox();
 }
 
 async function fetchPosts() {
@@ -45,6 +46,7 @@ function parsePost(post, postYear) {
 
 function renderPosts(posts) {
   const postElements = document.getElementById("posts");
+  // postElements.innerHTML = "";
 
   posts.forEach((post) => {
     const postElement = document.createElement("div");
@@ -55,5 +57,19 @@ function renderPosts(posts) {
             <div class="post-content">${post.content}</div>
         `;
     postElements.appendChild(postElement);
+  });
+}
+
+function setUpSearchBox() {
+  const searchBox = document.getElementById("search-box");
+  searchBox.addEventListener("input", () => {
+    const searchText = searchBox.value.toLowerCase();
+    const filteredPosts = posts.filter((post) => {
+      return (
+        post.title.toLowerCase().includes(searchText) ||
+        post.content.toLowerCase().includes(searchText)
+      );
+    });
+    renderPosts(filteredPosts);
   });
 }
